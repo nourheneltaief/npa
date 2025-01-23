@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Profile</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/parks">Parks</a></li>
+    <li><a href="/trails">Trails</a></li>
+    <li><a href="/wildlife">Wildlife</a></li>
+    <li><a href="/announcements">Announcements</a></li>
+    {% if not is_logged_in %}
+    <li><a href="/login">Login</a></li>
+    <li><a href="/register">Sign Up</a></li>
+    {% else %}
+    <li><a href="/book">Book a visit</a></li>
+    <li><a href="/bookings">Bookings</a></li>
+    <li><a href="/profile">My Profile</a></li>
+    {% endif %}
+  </ul>
+</nav>
+
+<div style="
+  width: 60%;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
+  text-align: center;
+  font-family: Arial, sans-serif;">
+
+  <h1 style="color: #4CAF50; margin-bottom: 20px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);">
+    User Profile
+  </h1>
+
+  <p style="color: #333; margin-bottom: 10px; font-size: 18px;">
+    <strong style="color: #4CAF50;">Username:</strong> {{ current_user.username }}
+  </p>
+  <p style="color: #333; margin-bottom: 10px; font-size: 18px;">
+    <strong style="color: #4CAF50;">Email:</strong> {{ current_user.email }}
+  </p>
+  <p style="color: #333; margin-bottom: 10px; font-size: 18px;">
+    <strong style="color: #4CAF50;">Points:</strong> {{ current_user.points }}
+  </p>
+
+  <h2 style="color: #FF9800; margin-top: 20px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);">
+    Badges Earned:
+  </h2>
+
+  {% if current_user.badges %}
+  <ul style="list-style-type: disc; padding-left: 20px; text-align: left; color: #333; font-size: 16px; margin-top: 10px;">
+    {% for badge in current_user.badges %}
+    <li style="margin-bottom: 10px; color: #673AB7;">
+      {{ badge.badge_name }}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p style="color: #f44336; font-style: italic; margin-top: 10px; font-size: 16px;">
+    You have not earned any badges yet.
+  </p>
+  {% endif %}
+</div>
+
+
+
+
+</body>
+</html>

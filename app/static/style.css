@@ -545,3 +545,44 @@ header h1 {
 .signup-card .message a:hover {
       text-decoration: underline;
     }
+
+
+.feedback-container {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 600px;
+}
+
+.feedback-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.feedback-container textarea {
+  width: 100%;
+  font-family: inherit;
+  font-size: 16px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.feedback-container button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.feedback-container button:hover {
+  background-color: #45A049; /* Green hover */
+}

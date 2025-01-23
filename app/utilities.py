@@ -1,4 +1,4 @@
-from models import Park, Trail, Wildlife, Announcement, User
+from models import Park, Trail, Wildlife, Announcement, User, Badge
 from werkzeug.security import generate_password_hash
 import requests, json, datetime
 
@@ -245,7 +245,8 @@ def create_admin_user(app, db):
             username=admin_creds["username"],
             email=admin_creds["email"],
             password=hashed_password,
-            role='admin'
+            role='admin',
+            points=60
         )
 
         existing_admin = User.query.filter_by(username=admin.username, email=admin.email).first()
@@ -253,6 +254,17 @@ def create_admin_user(app, db):
             db.session.add(admin)
         db.session.commit()
 
+
+def seed_badges(app, db):
+    with app.app_context():
+        if not Badge.query.first():
+            db.session.add(Badge(badge_name="Bronze Explorer", points_required=50))
+            db.session.add(Badge(badge_name="Silver Adventurer", points_required=100))
+            db.session.add(Badge(badge_name="Gold Voyager", points_required=200))
+            db.session.add(Badge(badge_name="Platinum Pioneer", points_required=500))
+            db.session.add(Badge(badge_name="Diamond Trailblazer", points_required=1000))
+
+        db.session.commit()
 
 def fetch_weather_data(location, date):
     with open('../credentials/creds.json', 'r') as file:

@@ -1,9 +1,9 @@
 from flask import Flask, request, redirect, render_template, url_for, flash, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import db, Park, User, Trail, Wildlife, Announcement, Booking
+from models import db, Park, User, Trail, Wildlife, Announcement, Booking, Feedback, Badge, UserBadges
 from utilities import (seed_parks, create_fictive_trails, create_fictive_wildlife, create_fictive_announcements,
-                       create_admin_user, fetch_weather_data)
+                       create_admin_user, fetch_weather_data, seed_badges)
 import secrets, datetime
 
 app = Flask(__name__)
@@ -123,9 +123,10 @@ def park_announcements(park_id):
 @app.route("/parks/<int:park_id>", methods=["GET"])
 def get_park_id(park_id):
     park = Park.query.get_or_404(park_id)
+    feedbacks = Feedback.query.filter_by(park_id=park.id).all()
     is_admin = current_user.is_authenticated and current_user.role == 'admin'
     return render_template("parks_details.html", park=park, is_admin=is_admin,
-                           is_logged_in=current_user.is_authenticated)
+                           is_logged_in=current_user.is_authenticated, feedbacks=feedbacks)
 
 # TODO create HTML page for trails data
 @app.route('/trails')
@@ -253,8 +254,38 @@ def update_park(park_id):
 
     return render_template('update_park.html', park=park, is_logged_in=current_user.is_authenticated)
 
+@app.route('/parks/delete/<int:park_id>', methods=['GET', 'POST'])
+@login_required
+def delete_park(park_id):
+    is_admin = current_user.is_authenticated and current_user.role == 'admin'
+    if is_admin:
+        park = Park.query.get_or_404(park_id)
+
+        if Trail.query.filter_by(park_id=park_id).first():
+            return jsonify({'message': 'Cannot delete park. It has associated trails.'}), 400
+        if Wildlife.query.filter_by(park_id=park_id).first():
+            return jsonify({'message': 'Cannot delete park. It has associated wildlife entries.'}), 400
+        if Announcement.query.filter_by(park_id=park_id).first():
+            return jsonify({'message': 'Cannot delete park. It has associated announcements.'}), 400
+        if Booking.query.filter_by(park_id=park_id).first():
+            return jsonify({'message': 'Cannot delete park. It has associated bookings.'}), 400
+        if Feedback.query.filter_by(park_id=park_id).first():
+            return jsonify({'message': 'Cannot delete park. It has associated feedbacks.'}), 400
+
+
+        db.session.delete(park)
+        db.session.commit()
+        flash("Park deleted successfully!", "success")
+    return redirect(url_for('view_parks'))
+
 
 ################################ NORMAL USER ################################
+
+@app.route('/profile')
+@login_required
+def user_profile():
+    return render_template('profile.html', is_logged_in=current_user.is_authenticated)
+
 
 @app.route('/bookings', methods=['GET'])
 @login_required
@@ -297,6 +328,8 @@ def create_booking():
 
         user_id = current_user.id
 
+        current_user.points += 10  # Add 10 points for each booking
+
         booking = Booking(
             user_id=user_id,
             activity=activity,
@@ -306,11 +339,38 @@ def create_booking():
         db.session.add(booking)
         db.session.commit()
 
+        # Check and award badges
+        award_badge(current_user)
+
         flash("Booking created successfully!", "success")
         return redirect(url_for('get_bookings'))  # Redirect after success
 
     parks = Park.query.all()
     return render_template('book.html', parks=parks, is_logged_in=current_user.is_authenticated)
+
+@app.route('/parks/<int:park_id>/feedback', methods=['GET', 'POST'])
+@login_required
+def submit_feedback(park_id):
+    park = Park.query.get_or_404(park_id)
+
+    if request.method == 'POST':
+        feedback_text = request.form.get('feedback')
+        if not feedback_text:
+            flash('Please provide feedback text.', 'error')
+            return redirect(url_for('submit_feedback', park_id=park_id))
+
+        new_feedback = Feedback(
+            user_id=current_user.id,
+            park_id=park_id,
+            feedback=feedback_text
+        )
+        db.session.add(new_feedback)
+        db.session.commit()
+        flash('Feedback submitted successfully!', 'success')
+        return redirect(url_for('get_park_id', park_id=park_id))
+
+    return render_template('feedback_form.html', park=park,
+                           is_logged_in=current_user.is_authenticated)
 
 # TODO create html page for weather info
 @app.route('/weather/<park_id>/<date>', methods=['GET'])
@@ -320,6 +380,16 @@ def check_weather(park_id, date):
     weather = fetch_weather_data(park.location, date)
     return jsonify(weather)
 
+def award_badge(user):
+    badges = Badge.query.all()
+
+    for badge in badges:
+        if user.points >= badge.points_required:
+            user_badge = UserBadges(user_id=user.id, badge_id=badge.badge_id, badge_name=badge.badge_name)
+            existing_user_badge = UserBadges.query.filter_by(user_id=user.id, badge_id=badge.badge_id).first()
+            if not existing_user_badge:
+                db.session.add(user_badge)
+            db.session.commit()
 
 if __name__ == '__main__':
     with app.app_context():
@@ -329,4 +399,5 @@ if __name__ == '__main__':
     create_fictive_wildlife(app, db)
     create_fictive_announcements(app, db)
     create_admin_user(app, db)
+    seed_badges(app, db)
     app.run(debug=True)
