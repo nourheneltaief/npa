@@ -1,0 +1,6 @@
+flask
+flask_restx
+flask-login
+flask-wtf
+werkzeug
+requests

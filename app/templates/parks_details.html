@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <title>{{ park.name }} - Details</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .park-card {
+        text-align: center;
+        margin: auto;
+        max-width: 600px;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .park-card img {
+        width: 100%;
+        height: auto;
+        max-height: 400px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .park-card h1 {
+        font-size: 2rem;
+        margin-top: 10px;
+    }
+
+    .park-card p {
+        font-size: 1rem;
+        margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/parks">Parks</a></li>
+    <li><a href="/trails">Trails</a></li>
+    <li><a href="/wildlife">Wildlife</a></li>
+    <li><a href="/announcements">Announcements</a></li>
+    {% if not is_logged_in %}
+    <li><a href="/login">Login</a></li>
+    <li><a href="/register">Sign Up</a></li>
+    {% else %}
+    <li><a href="/book">Book a visit</a></li>
+    <li><a href="/bookings">Bookings</a></li>
+    {% endif %}
+  </ul>
+</nav>
+<section id="park-details">
+  <a href="/parks" class="back-button">← Back to All Parks</a>
+  {% if is_admin %}
+  <a href="{{ url_for('update_park', park_id=park.id) }}" class="back-button" >Update Park</a>
+  {% endif %}
+  <div class="park-card">
+    <img src="{{ url_for('static', filename=park.image_url) }}" alt="{{ park.name }}">
+    <h1>{{ park.name }}</h1>
+    <p><strong>Location:</strong> {{ park.location }}</p>
+    <p><strong>Description:</strong> {{ park.description }}</p>
+  </div>
+</section>
+</body>
+</html>

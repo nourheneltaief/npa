@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>National Parks</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+    <h1>Welcome to National Parks Explorer</h1>
+    <p>Your gateway to exploring the beauty and diversity of national parks around the world.</p>
+</header>
+
+<nav>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/parks">Parks</a></li>
+        <li><a href="/trails">Trails</a></li>
+        <li><a href="/wildlife">Wildlife</a></li>
+        <li><a href="/announcements">Announcements</a></li>
+        {% if not is_logged_in %}
+        <li><a href="/login">Login</a></li>
+        <li><a href="/register">Sign Up</a></li>
+        {% else %}
+        <li><a href="/book">Book a visit</a></li>
+        <li><a href="/bookings">Bookings</a></li>
+        {% endif %}
+    </ul>
+</nav>
+
+<section id="featured-parks">
+    <h2>Featured Parks</h2>
+    <div class="park-list">
+        <div class="park">
+            <img src="{{ url_for('static', filename='bouhedma.jpg') }}" alt="bouhedma">
+            <h3>Bou-Hedma National Park</h3>
+            <p>Located in both the Gafsa Governorate and Sidi Bouzid Governorate</p>
+            <a href="/parks/1">Learn More</a>
+        </div>
+        <div class="park">
+            <img src="{{ url_for('static', filename='el_feidja.jpg') }}" alt="el_feidja">
+            <h3>El Feidja National Park</h3>
+            <p>Located in Jendouba Governorate</p>
+            <a href="/parks/2">Learn More</a>
+        </div>
+        <div class="park">
+            <img src="{{ url_for('static', filename='boukornine.jpg') }}" alt="boukornine">
+            <h3>Boukornine National Park</h3>
+            <p>Located near Hammam-Lif and just 15 kilometres to the capital city of Tunis</p>
+            <a href="/parks/3">Learn More</a>
+        </div>
+    </div>
+    <a href="/parks" class="view-more">See More Parks</a>
+</section>
+
+<section id="trails-wildlife">
+    <h2>Popular Trails & Wildlife</h2>
+    <div class="content-container">
+        <div class="trails">
+            <h3>Featured Trails</h3>
+            <ul>
+                <li><a href="/trails/1">Bou-Hedma National Park Trail</a></li>
+                <li><a href="/trails/2">El Feidja National Park Trail</a></li>
+                <li><a href="/trails/3">Boukornine National Park Trail</a></li>
+            </ul>
+        </div>
+        <div class="wildlife">
+            <h3>Featured Wildlife</h3>
+            <ul>
+                <li>Wild Boar</li>
+                <li>European Hedgehog</li>
+                <li>Barbary Sheep</li>
+            </ul>
+        </div>
+        <div class="parks">
+            <h3>Featured Parks</h3>
+            <ul>
+                <li><a href="/parks/1">Bou-Hedma National Park</a></li>
+                <li><a href="/parks/2">El Feidja National Park</a></li>
+                <li><a href="/parks/3">Boukornine National Park</a></li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+
+<section id="user-features">
+    <h2>Sign Up to Access More Features</h2>
+    <p>Login to make bookings, leave feedback, and personalize your national park experience.</p>
+    <a href="/login" class="cta-btn">Login</a>
+    <a href="/register" class="cta-btn">Sign Up</a>
+</section>
+
+<footer>
+    <p>&copy; 2025 National Parks Explorer</a></p>
+</footer>
+</body>
+</html>

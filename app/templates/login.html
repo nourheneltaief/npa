@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/parks">Parks</a></li>
+    <li><a href="/trails">Trails</a></li>
+    <li><a href="/wildlife">Wildlife</a></li>
+    <li><a href="/announcements">Announcements</a></li>
+    {% if not is_logged_in %}
+    <li><a href="/login">Login</a></li>
+    <li><a href="/register">Sign Up</a></li>
+    {% else %}
+    <li><a href="/book">Book a visit</a></li>
+    <li><a href="/bookings">Bookings</a></li>
+    {% endif %}
+  </ul>
+</nav>
+<div class="login-container">
+  <div class="login-card">
+    <h1>Login</h1>
+
+    <!-- Display any flash messages -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class="flashes">
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="/login">
+      <div>
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required placeholder="Enter your username">
+      </div>
+
+      <div>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required placeholder="Enter your password">
+      </div>
+
+      <button type="submit">Login</button>
+    </form>
+
+    <div class="message">
+      <p>Don't have an account? <a href="/register">Register here</a></p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

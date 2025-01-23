@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <title>All Park Announcements</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f7f6;
+      margin: 0;
+      padding: 0;
+    }
+
+    #all-announcements {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    .park-announcements {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 40px;
+      padding: 20px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .park-announcements:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .park-announcements h2 {
+      font-size: 2rem;
+      color: #007BFF;
+      margin-bottom: 15px;
+    }
+
+    .park-announcements ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .park-announcements li {
+      border-bottom: 1px solid #ddd;
+      padding: 15px 0;
+    }
+
+    .park-announcements li:last-child {
+      border-bottom: none;
+    }
+
+    .park-announcements h3 {
+      font-size: 1.5rem;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .park-announcements p {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .park-announcements strong {
+      font-weight: bold;
+    }
+
+    .park-announcements .no-announcements {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #888;
+      margin-top: 20px;
+    }
+
+    .no-parks {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #888;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1 style="color:white">Check out Parks' Announcements</h1>
+</header>
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/parks">Parks</a></li>
+    <li><a href="/trails">Trails</a></li>
+    <li><a href="/wildlife">Wildlife</a></li>
+    <li><a href="/announcements">Announcements</a></li>
+    {% if not is_logged_in %}
+    <li><a href="/login">Login</a></li>
+    <li><a href="/register">Sign Up</a></li>
+    {% else %}
+    <li><a href="/book">Book a visit</a></li>
+    <li><a href="/bookings">Bookings</a></li>
+    {% endif %}
+  </ul>
+</nav>
+<section id="all-announcements">
+  {% if all_parks %}
+  <h1>All Park Announcements</h1>
+  {% endif %}
+
+  {% if park_announcements %}
+  {% for park, announcements in park_announcements.items() %}
+  <div class="park-announcements">
+    <h2>Announcements for {{ park.name }}</h2>
+
+    {% if announcements %}
+    <ul>
+      {% for announcement in announcements %}
+      <li>
+        <h3>{{ announcement.title }}</h3>
+        <p>{{ announcement.content }}</p>
+        <p><strong>Posted on:</strong> {{ announcement.created_at }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="no-announcements">No announcements for this park.</p>
+    {% endif %}
+  </div>
+  {% endfor %}
+  {% else %}
+  <p class="no-parks">No parks found or no announcements available.</p>
+  {% endif %}
+</section>
+</body>
+</html>

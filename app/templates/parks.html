@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Parks</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+  <h1>Explore Tunisian National Parks</h1>
+</header>
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/parks">Parks</a></li>
+    <li><a href="/trails">Trails</a></li>
+    <li><a href="/wildlife">Wildlife</a></li>
+    <li><a href="/announcements">Announcements</a></li>
+    {% if not is_logged_in %}
+    <li><a href="/login">Login</a></li>
+    <li><a href="/register">Sign Up</a></li>
+    {% else %}
+    <li><a href="/book">Book a visit</a></li>
+    <li><a href="/bookings">Bookings</a></li>
+    {% endif %}
+  </ul>
+</nav>
+{% if is_admin %}
+<a href="/register-park" class="register-button ">Register New Park</a>
+{% endif %}
+<section id="parks-list">
+  <h2>All Parks</h2>
+  {% if parks %}
+  <div class="parks-container">
+    {% for park in parks %}
+    <div class="park-card">
+      <a href="{{ url_for('get_park_id', park_id=park.id) }}">
+        <img src="{{ url_for('static', filename=park.image_url) }}" alt="{{ park.name }}" class="park-image"
+             style="width: 100%; height: auto; max-width: 300px; object-fit: cover;" data-id="{{ park.id }}">
+      </a>
+      <h3>{{ park.name }}</h3>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <p>No parks found. Add some parks to the database!</p>
+  {% endif %}
+</section>
+
+</body>
+</html>

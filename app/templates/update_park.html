@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <title>Update a Park</title>
+  <style>
+    /* General Reset */
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        background-color: #f4f4f4;
+    }
+
+    /* Container */
+    .form-container {
+        width: 90%;
+        max-width: 500px;
+        margin: 30px auto;
+        padding: 25px;
+        background: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Title */
+    .form-container h1 {
+        text-align: center;
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    /* Form Labels */
+    .form-container label {
+        display: block;
+        margin: 10px 0 5px;
+        font-weight: bold;
+        color: #555;
+    }
+
+    /* Inputs and Textareas */
+    .form-container input,
+    .form-container textarea {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1rem;
+        background-color: #fafafa;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-container input:focus,
+    .form-container textarea:focus {
+        border-color: #007BFF;
+        outline: none;
+    }
+
+    /* File Input */
+    .form-container input[type="file"] {
+        padding: 5px;
+    }
+
+    /* Buttons */
+    .form-container button {
+        width: 100%;
+        padding: 12px;
+        font-size: 1rem;
+        color: white;
+        background-color: #007BFF;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .form-container button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Back Link */
+    .back-button {
+        display: inline-block;
+        margin: 15px auto;
+        text-align: center;
+        font-size: 1rem;
+        color: #007BFF;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .back-button:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .form-container {
+            padding: 20px;
+        }
+
+        .form-container h1 {
+            font-size: 1.5rem;
+        }
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/parks">Parks</a></li>
+    <li><a href="/trails">Trails</a></li>
+    <li><a href="/wildlife">Wildlife</a></li>
+    <li><a href="/announcements">Announcements</a></li>
+    {% if not is_logged_in %}
+    <li><a href="/login">Login</a></li>
+    <li><a href="/register">Sign Up</a></li>
+    {% else %}
+    <li><a href="/book">Book a visit</a></li>
+    <li><a href="/bookings">Bookings</a></li>
+    {% endif %}
+  </ul>
+</nav>
+<section id="update-park">
+  <a href="/parks" class="back-button" aria-label="Back to All Parks" style="color:white">← Back to All Parks</a>
+  <div class="form-container">
+    <h1>Update {{ park.name }}</h1>
+    <form action="{{ url_for('update_park', park_id=park.id) }}" method="POST" enctype="multipart/form-data">
+      <label for="name">Park Name</label>
+      <input type="text" id="name" name="name" placeholder="Enter the park's name" required>
+
+      <label for="location">Location</label>
+      <input type="text" id="location" name="location" placeholder="Enter the park's location" required>
+
+      <label for="description">Description</label>
+      <textarea id="description" name="description" rows="4" placeholder="Enter a brief description" required></textarea>
+
+      <label for="image">Park Image</label>
+      <input type="file" id="image" name="image" accept="image/*">
+
+      <button type="submit">Update Park</button>
+    </form>
+  </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Booking</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .form-container {
+        width: 90%;
+        max-width: 600px;
+        margin: 30px auto;
+        padding: 20px;
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container h1 {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        font-size: 1rem;
+        margin: 10px 0 5px;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        font-size: 1.2rem;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    .back-link {
+        display: block;
+        margin-top: 20px;
+        text-align: center;
+        text-decoration: none;
+        color: #007bff;
+        font-size: 1rem;
+    }
+
+    .back-link:hover {
+        text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/parks">Parks</a></li>
+    <li><a href="/trails">Trails</a></li>
+    <li><a href="/wildlife">Wildlife</a></li>
+    <li><a href="/announcements">Announcements</a></li>
+    {% if not is_logged_in %}
+    <li><a href="/login">Login</a></li>
+    <li><a href="/register">Sign Up</a></li>
+    {% else %}
+    <li><a href="/book">Book a visit</a></li>
+    <li><a href="/bookings">Bookings</a></li>
+    {% endif %}
+  </ul>
+</nav>
+<div class="form-container">
+  <h1>Update Booking</h1>
+  <form action="{{ url_for('update_booking', booking_id=booking.booking_id) }}" method="POST">
+    <!-- Activity -->
+    <label for="activity">Activity</label>
+    <select id="activity" name="activity" required>
+      <option value="camping">Camping</option>
+      <option value="tour">Tour</option>
+      <option value="hiking">Hiking</option>
+      <option value="picnic">Picnic</option>
+    </select>
+
+    <!-- Park -->
+    <label for="park_id">Park</label>
+    <select id="park_id" name="park_id" required>
+      {% for park in parks %}
+      <option value="{{ park.id }}" {% if park.id == booking.park_id %}selected{% endif %}>
+        {{ park.name }}
+      </option>
+      {% endfor %}
+    </select>
+
+    <!-- Booking Date -->
+    <label for="date">Booking Date</label>
+    <input type="date" id="date" name="date" value="{{ booking.date.strftime('%Y-%m-%d') }}" required>
+
+    <!-- Submit Button -->
+    <button type="submit">Update Booking</button>
+  </form>
+
+  <a href="{{ url_for('get_bookings') }}" class="back-link">← Back to Bookings</a>
+</div>
+</body>
+</html>

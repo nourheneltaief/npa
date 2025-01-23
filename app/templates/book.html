@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book a Visit</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        background-color: #f4f4f4;
+    }
+
+    .form-container {
+        width: 90%;
+        max-width: 500px;
+        margin: 30px auto;
+        padding: 20px;
+        background: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container h1 {
+        text-align: center;
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .form-container label {
+        display: block;
+        margin: 10px 0 5px;
+        font-weight: bold;
+        color: #555;
+    }
+
+    .form-container input,
+    .form-container select {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        background-color: #fafafa;
+    }
+
+    .form-container button {
+        width: 100%;
+        padding: 12px;
+        font-size: 1rem;
+        color: white;
+        background-color: #007BFF;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .form-container button:hover {
+        background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/parks">Parks</a></li>
+    <li><a href="/trails">Trails</a></li>
+    <li><a href="/wildlife">Wildlife</a></li>
+    <li><a href="/announcements">Announcements</a></li>
+    {% if not is_logged_in %}
+    <li><a href="/login">Login</a></li>
+    <li><a href="/register">Sign Up</a></li>
+    {% else %}
+    <li><a href="/book">Book a visit</a></li>
+    <li><a href="/bookings">Bookings</a></li>
+    {% endif %}
+  </ul>
+</nav>
+<div class="form-container">
+  <h1>Book a Visit</h1>
+  <form action="{{ url_for('create_booking') }}" method="POST">
+    <label for="activity">Activity</label>
+    <select id="activity" name="activity" required>
+      <option value="camping">Camping</option>
+      <option value="tour">Tour</option>
+      <option value="hiking">Hiking</option>
+      <option value="picnic">Picnic</option>
+    </select>
+
+    <label for="park_id">Park</label>
+    <select id="park_id" name="park_id" required>
+      {% for park in parks %}
+      <option value="{{ park.id }}">{{ park.name }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="date">Date</label>
+    <input type="date" id="date" name="date" required>
+
+    <button type="submit">Book Now</button>
+  </form>
+</div>
+</body>
+</html>
