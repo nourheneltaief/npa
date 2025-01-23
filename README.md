@@ -17,6 +17,7 @@ wildlife and trail information. Admin users can also manage park registrations a
     - Create and Update Parks (Admin Only)
     - View Wildlife and Trails for Specific Parks
     - View and Manage Announcements for Parks
+    - Feedback from other users' experiences
 
 - **Bookings**
     - Create, Update, and Delete Bookings
@@ -24,6 +25,9 @@ wildlife and trail information. Admin users can also manage park registrations a
 
 - **Weather Information**
     - Fetch Weather Data for a Park on a Specific Date
+
+- **Feedback**
+  - Submit feedbacks based on personal park visits
 
 ## Installation
 
