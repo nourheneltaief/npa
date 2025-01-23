@@ -135,11 +135,9 @@ def seed_parks(app, db):
 
         # Loop through each park data
         for park_data in parks_data:
-            # Check if the park already exists by name (or another unique attribute)
             existing_park = Park.query.filter_by(name=park_data['name']).first()
 
             if not existing_park:
-                # Add the park if it does not already exist
                 new_park = Park(
                     name=park_data['name'],
                     description=park_data['description'],
@@ -148,7 +146,6 @@ def seed_parks(app, db):
                 )
                 db.session.add(new_park)
 
-        # Commit the changes if any new parks were added
         db.session.commit()
 
 
@@ -168,7 +165,6 @@ def create_fictive_trails(app, db):
                 {"name": "El Feidja Forest Trail", "difficulty": "Medium", "distance": 6.5,
                  "description": "A forest trail with moderate difficulty"}
             ],
-            # Add more parks and trails entries here...
         }
 
         for park_name, trails_data in parks.items():
@@ -203,7 +199,6 @@ def create_fictive_wildlife(app, db):
                 {"species_name": "European Hedgehog", "description": "A small hedgehog species native to Europe",
                  "image_url": "https://example.com/european_hedgehog.jpg"}
             ],
-            # Add more parks and wildlife entries here...
         }
 
         for park_name, wildlife_data in wildlife_entries.items():
@@ -246,7 +241,6 @@ def create_admin_user(app, db):
         admin_creds = creds["admin_creds"]
         hashed_password = generate_password_hash(admin_creds["password"])
 
-        # Create an admin
         admin = User(
             username=admin_creds["username"],
             email=admin_creds["email"],

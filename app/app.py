@@ -14,7 +14,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 login_manager_ = LoginManager(app)
 login_manager_.login_view = "login"
 
-# Initialize database
 db.init_app(app)
 
 
@@ -33,7 +32,7 @@ def login():
 
         if user and check_password_hash(user.password, password):
             login_user(user)
-            return redirect(url_for('view_parks'))  # Redirect to parks listing or dashboard
+            return redirect(url_for('view_parks'))
         else:
             flash('Invalid credentials. Please try again.')
     return render_template('login.html', is_logged_in=current_user.is_authenticated)
@@ -54,12 +53,10 @@ def register():
         password = request.form['password']
         confirm_password = request.form['confirm_password']
 
-        # Basic validation to check if password and confirm_password match
         if password != confirm_password:
             flash('Passwords do not match!', 'danger')
             return redirect(url_for('register'))
 
-        # Check if username or email already exists
         user = User.query.filter_by(username=username).first()
         if user:
             flash('Username already exists. Please choose another one.', 'danger')
@@ -70,10 +67,8 @@ def register():
             flash('Email already registered. Please use a different one.', 'danger')
             return redirect(url_for('register'))
 
-        # Hash the password before saving it to the database
         hashed_password = generate_password_hash(password)
 
-        # Create a new user
         new_user = User(
             username=username,
             email=email,
@@ -81,7 +76,6 @@ def register():
             role='user'
         )
 
-        # Add the user to the database
         db.session.add(new_user)
         db.session.commit()
 
@@ -110,7 +104,6 @@ def park_announcements_all():
     parks = Park.query.all()  # Retrieve all parks
     park_announcements_ = {}
 
-    # For each park, get the announcements and store them in the dictionary
     for park in parks:
         park_announcements_[park] = Announcement.query.filter_by(park_id=park.id).all()
 
@@ -208,20 +201,18 @@ def get_wildlife_for_park(park_id):
 ################################ ADMIN USER ################################
 
 @app.route('/register-park', methods=['GET', 'POST'])
-@login_required  # Ensure user is logged in
+@login_required
 def register_park():
     if request.method == 'POST':
         name = request.form['name']
         location = request.form['location']
         description = request.form['description']
 
-        # Handle the file upload
         image = request.files['image']
         image_filename = image.filename
         image_path = f'static/{image_filename}'
-        image.save(image_path)  # Save the image to a static directory
+        image.save(image_path)
 
-        # Create a new Park entry and add it to the database
         new_park = Park(name=name, location=location, description=description, image_url=image_path.split("/")[1])
         db.session.add(new_park)
         db.session.commit()
@@ -231,7 +222,7 @@ def register_park():
     return render_template('register_park.html', is_logged_in=current_user.is_authenticated)
 
 @app.route('/parks/update/<int:park_id>', methods=['GET', 'POST'])
-@login_required  # Ensure user is logged in
+@login_required
 def update_park(park_id):
     park = Park.query.get_or_404(park_id)
     if request.method == 'POST':
@@ -253,7 +244,7 @@ def update_park(park_id):
         if image:
             image_filename = image.filename
             image_path = f'static/{image_filename}'
-            image.save(image_path)  # Save the image to a static directory
+            image.save(image_path)
             park.image_url = image_path.split("/")[1]
 
         db.session.commit()
@@ -268,7 +259,7 @@ def update_park(park_id):
 @app.route('/bookings', methods=['GET'])
 @login_required
 def get_bookings():
-    user_id = current_user.id  # Replace with the method you use to get the logged-in user's ID
+    user_id = current_user.id
     bookings = Booking.query.filter_by(user_id=user_id).order_by(Booking.created_at.desc()).all()
     return render_template('bookings.html', bookings=bookings, is_logged_in=current_user.is_authenticated)
 
@@ -304,10 +295,8 @@ def create_booking():
         park_id = request.form['park_id']
         date = request.form['date']
 
-        # Replace `current_user.id` with your method of fetching logged-in user's ID
         user_id = current_user.id
 
-        # Create a new booking
         booking = Booking(
             user_id=user_id,
             activity=activity,

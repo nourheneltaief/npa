@@ -4,9 +4,9 @@ import datetime
 db = SQLAlchemy()
 
 class Park(db.Model):
-    __tablename__ = 'parks'  # Name of the table
+    __tablename__ = 'parks'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # Primary key
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=True)
     location = db.Column(db.String(200), nullable=False)
@@ -32,9 +32,9 @@ class Trail(db.Model):
 
     trail_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    park_id = db.Column(db.Integer, db.ForeignKey('parks.id'), nullable=False)  # Foreign key referencing Park
+    park_id = db.Column(db.Integer, db.ForeignKey('parks.id'), nullable=False)
     difficulty = db.Column(db.String(50), nullable=False)
-    distance = db.Column(db.Float, nullable=False)  # in kilometers
+    distance = db.Column(db.Float, nullable=False)
     description = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now(datetime.UTC))
 
@@ -45,12 +45,12 @@ class Trail(db.Model):
 class Wildlife(db.Model):
     __tablename__ = 'wildlife'
 
-    wildlife_id = db.Column(db.Integer, primary_key=True)  # Primary Key
-    species_name = db.Column(db.String(100), nullable=False)  # Name of the species
-    park_id = db.Column(db.Integer, db.ForeignKey('parks.id'), nullable=False)  # Foreign key to Park
-    description = db.Column(db.Text, nullable=False)  # Description of the species
-    image_url = db.Column(db.String(200), nullable=False)  # URL to the species' image
-    created_at = db.Column(db.DateTime, default=datetime.datetime.now(datetime.UTC))  # Automatically set the creation time
+    wildlife_id = db.Column(db.Integer, primary_key=True)
+    species_name = db.Column(db.String(100), nullable=False)
+    park_id = db.Column(db.Integer, db.ForeignKey('parks.id'), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    image_url = db.Column(db.String(200), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now(datetime.UTC))
 
     def __repr__(self):
         return f"<Wildlife {self.species_name}>"
@@ -76,7 +76,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(100), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
-    role = db.Column(db.String(50), nullable=False, default="user")  # Role: "user" or "admin"
+    role = db.Column(db.String(50), nullable=False, default="user")
 
     def __repr__(self):
         return f"<User {self.username}>"
@@ -92,7 +92,6 @@ class Booking(db.Model):
     date = db.Column(db.Date, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now(datetime.UTC), nullable=False)
 
-    # Relationships
     user = db.relationship('User', backref='bookings', lazy=True)
     park = db.relationship('Park', backref='bookings', lazy=True)
 
