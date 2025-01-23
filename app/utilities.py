@@ -245,8 +245,7 @@ def create_admin_user(app, db):
             username=admin_creds["username"],
             email=admin_creds["email"],
             password=hashed_password,
-            role='admin',
-            points=60
+            role='admin'
         )
 
         existing_admin = User.query.filter_by(username=admin.username, email=admin.email).first()
